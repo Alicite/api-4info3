@@ -37,7 +37,7 @@ const createUsuario = async (user) => {
     return `Usuário ${user.nome} adicionado ao MySQL!`;
 }
 
-const deleteUser = async (id) => {
+const deleteUsuario = async (id) => {
     const con = await conexao();
     await con.query('DELETE FROM usuarios WHERE id=?', [id]);
 
@@ -45,7 +45,7 @@ const deleteUser = async (id) => {
     return `Usuário ${id} deletado do MySQL!`;
 }
 
-const attUser = async (user, id) => {
+const attUsuario = async (user, id) => {
     const con = await conexao();
     await con.query(
         'UPDATE usuarios SET nome = ?,  email = ? WHERE id = ?',
