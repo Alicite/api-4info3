@@ -26,4 +26,15 @@ const getUsuario = async (id=undefined) => {
     return dados[0];
 }
 
-console.log(await getUsuario(2));
+const createUsuario = async (user) => {
+    const con = await conexao();
+    await con.query(
+        'INSERT INTO usuarios (nome, email) VALUES (?, ?);',
+        [user.nome, user.email]
+    );
+
+    con.close();
+    return `Usuário ${user.nome} adicionado ao MySQL!`;
+}
+
+console.log(await getUsuario());
