@@ -12,19 +12,8 @@ const conexao = async () => {
     return con;
 }
 
-const getUsuario = async (id=undefined) => {
-    const con = await conexao();
-    let dados;
-
-    if (!id) {
-        dados = await con.query('SELECT * FROM usuarios;');
-    } else {
-        dados = await con.query('SELECT * FROM usuarios WHERE id=?;', [id]);
-    }
-    
-    con.close();
-    return dados[0];
-}
+const getUsuarios = async (con) => await con.query('SELECT * FROM usuarios;');
+const getUsuario = async (con, user) => await con.query('SELECT * FROM usuarios WHERE id=?;', [user.id]);
 
 const createUsuario = async (user) => {
     const con = await conexao();
@@ -56,4 +45,17 @@ const attUsuario = async (user, id) => {
     return `Usuário ${user.nome} atualizado no MySQL!`;
 }
 
-console.log(await getUsuario());
+const manipularSQl = async (user, callback) => {
+    let resultado;
+    try {
+        const con = await conexao();
+        resultado = await callback(con, user);
+        con.close();
+    } catch (e) {
+        resultado = `Ocorreu um erro: ${e.message}`;
+    } finally {
+        return resultado;
+    }
+}
+
+console.log(await manipularSQl({}, getUsuarios));
