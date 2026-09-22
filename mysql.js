@@ -37,4 +37,23 @@ const createUsuario = async (user) => {
     return `Usuário ${user.nome} adicionado ao MySQL!`;
 }
 
+const deleteUser = async (id) => {
+    const con = await conexao();
+    await con.query('DELETE FROM usuarios WHERE id=?', [id]);
+
+    con.close();
+    return `Usuário ${id} deletado do MySQL!`;
+}
+
+const attUser = async (user, id) => {
+    const con = await conexao();
+    await con.query(
+        'UPDATE usuarios SET nome = ?,  email = ? WHERE id = ?',
+        [user.nome, user.email, id]
+    );
+
+    con.close();
+    return `Usuário ${user.nome} atualizado no MySQL!`;
+}
+
 console.log(await getUsuario());
