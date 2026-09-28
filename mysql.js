@@ -12,36 +12,37 @@ const conexao = async () => {
     return con;
 }
 
-const getUsuarios = async (con) => await con.query('SELECT * FROM usuarios;');
-const getUsuario = async (con, user) => await con.query('SELECT * FROM usuarios WHERE id=?;', [user.id]);
+const getUsuarios = async (con) => {
+    const resultado = await con.query('SELECT * FROM usuarios;');
+    return resultado[0];
+};
 
-const createUsuario = async (user) => {
-    const con = await conexao();
+const getUsuario = async (con, user) => {
+    const resultado = await con.query('SELECT * FROM usuarios WHERE id=?;', [user.id]);
+    return resultado[0][0];
+};
+
+const createUsuario = async (con, user) => {
     await con.query(
         'INSERT INTO usuarios (nome, email) VALUES (?, ?);',
         [user.nome, user.email]
     );
 
-    con.close();
     return `Usuário ${user.nome} adicionado ao MySQL!`;
 }
 
-const deleteUsuario = async (id) => {
-    const con = await conexao();
-    await con.query('DELETE FROM usuarios WHERE id=?', [id]);
+const deleteUsuario = async (con, user) => {
+    await con.query('DELETE FROM usuarios WHERE id=?', [user.id]);
 
-    con.close();
-    return `Usuário ${id} deletado do MySQL!`;
+    return `Usuário ${user.id} deletado do MySQL!`;
 }
 
-const attUsuario = async (user, id) => {
-    const con = await conexao();
+const attUsuario = async (con, user) => {
     await con.query(
         'UPDATE usuarios SET nome = ?,  email = ? WHERE id = ?',
-        [user.nome, user.email, id]
+        [user.nome, user.email, user.id]
     );
 
-    con.close();
     return `Usuário ${user.nome} atualizado no MySQL!`;
 }
 
@@ -58,4 +59,15 @@ const manipularSQl = async (user, callback) => {
     }
 }
 
-console.log(await manipularSQl({}, getUsuarios));
+// const requisicao = { body: {
+//     id: 7,
+//     nome: "Geovos",
+//     email: "geovos@gmail.com"
+// }}
+// const usuario = await manipularSQl({id: 7}, getUsuario);
+// for (let [chave, valor] of Object.entries(requisicao.body)){
+//     usuario[chave] = valor;
+// }
+// console.log(usuario);
+
+// console.log(await manipularSQl(usuario, attUsuario));
