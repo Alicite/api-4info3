@@ -12,4 +12,10 @@ const createUsuario = async (con, user) => {
     return `Usuário ${user.nome} adicionado ao MongoDB!`;
 }
 
-console.log(await manipularDB('', {nome: "Guilherme", email: "guilherme@gmail.com"}, createUsuario));
+const deleteUsuario = async (con, user) => {
+    await con.db("4INFO3").collection("Alunos").findOneAndDelete({_id: new ObjectId(user.id)});
+
+    return `Usuário ${user.id} deletado do MongoDB!`
+}
+
+console.log(await manipularDB('', {id: '6ab5b5726f23110b2e102318'}, deleteUsuario));
