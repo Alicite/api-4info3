@@ -18,4 +18,12 @@ const deleteUsuario = async (con, user) => {
     return `Usuário ${user.id} deletado do MongoDB!`
 }
 
-console.log(await manipularDB('', {id: '6ab5b5726f23110b2e102318'}, deleteUsuario));
+const attUsuario = async (con, user) => {
+    const _id = new ObjectId(user.id);
+    delete user.id;
+    await con.db("4INFO3").collection("Alunos").replaceOne({ _id }, user);
+
+    return `Usuário ${user.nome} atualizado no MongoDB!`;
+}
+
+// console.log(await manipularDB('', {id: '6abae7c64773cfc30f11eebb', nome: "Reginaldo", email: "regi@gmail.com"}, attUsuario));
