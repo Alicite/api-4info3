@@ -1,4 +1,6 @@
+import { MongoClient } from "mongodb";
 import mysql from 'mysql2/promise';
+import 'dotenv/config';
 
 const conexaoMySQL = async () => {
     const con = await mysql.createConnection({
@@ -12,10 +14,18 @@ const conexaoMySQL = async () => {
     return con;
 }
 
-export const manipularDB = async (user, callback) => {
+const conexaoMongoDB = async () => {
+    const URI = process.env.MONGO;
+    const client = new MongoClient(URI);
+    const con = await client.connect();
+
+    return con;
+}
+
+export const manipularDB = async (db, user, callback) => {
     let resultado;
     try {
-        const con = await conexaoMySQL();
+        const con = db == "mysql" ? await conexaoMySQL() : await conexaoMongoDB();
         resultado = await callback(con, user);
         con.close();
     } catch (e) {
