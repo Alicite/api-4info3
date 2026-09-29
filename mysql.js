@@ -33,3 +33,6 @@ const attUsuario = async (con, user) => {
 
     return `Usuário ${user.nome} atualizado no MySQL!`;
 }
+
+const mysql = { getUsuarios, getUsuario, createUsuario, deleteUsuario, attUsuario };
+export default mysql;

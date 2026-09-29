@@ -1,7 +1,5 @@
 import { ObjectId } from "mongodb";
 import 'dotenv/config';
-import { manipularDB } from './db.js'
-
 
 const getUsuarios = async (con) => await con.db("4INFO3").collection("Alunos").find({}).toArray();
 const getUsuario = async (con, user) => await con.db("4INFO3").collection("Alunos").findOne({_id: new ObjectId(user.id)});
@@ -25,3 +23,6 @@ const attUsuario = async (con, user) => {
 
     return `Usuário ${user.nome} atualizado no MongoDB!`;
 }
+
+const mongo = { getUsuarios, getUsuario, createUsuario, deleteUsuario, attUsuario };
+export default mongo;
