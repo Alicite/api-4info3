@@ -25,5 +25,3 @@ const attUsuario = async (con, user) => {
 
     return `Usuário ${user.nome} atualizado no MongoDB!`;
 }
-
-// console.log(await manipularDB('', {id: '6abae7c64773cfc30f11eebb', nome: "Reginaldo", email: "regi@gmail.com"}, attUsuario));

@@ -33,5 +33,3 @@ const attUsuario = async (con, user) => {
 
     return `Usuário ${user.nome} atualizado no MySQL!`;
 }
-
-// console.log(await manipularDB('mysql', {}, getUsuarios));
