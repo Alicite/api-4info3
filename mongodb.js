@@ -7,6 +7,7 @@ const getUsuario = async (con, user) => await con.db("4INFO3").collection("Aluno
 const createUsuario = async (con, user) => {
     await con.db("4INFO3").collection("Alunos").insertOne(user);
 
+    // throw new Error("tentando errar");
     return `Usuário ${user.nome} adicionado ao MongoDB!`;
 }
 

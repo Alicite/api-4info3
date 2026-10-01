@@ -16,7 +16,8 @@ export const manipularDB = async (user, callback) => {
         resultado = await callback(con, user);
         con.close();
     } catch (e) {
-        resultado = `Ocorreu um erro: ${e.message}`;
+        resultado = null;
+        console.error(e.message);
     } finally {
         return resultado;
     }
