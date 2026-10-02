@@ -54,7 +54,7 @@ app.post('/alunos', async (req, res) => {
             if (alunoAdicionado == null) {
                 res.status(404).json('Não foi possível adicionar o aluno no banco de dados!');
             } else {
-                res.status(201).json(`Aluno ${aluno.nome} adicionado ao banco de dados!`);
+                res.status(201).json(alunoAdicionado);
             }
         } else {
             res.status(409).json(`O email ${aluno.email} já está registrado no banco de dados!`);
@@ -63,6 +63,17 @@ app.post('/alunos', async (req, res) => {
         console.error(e);
     }
 });
+
+app.delete('/alunos/:id', async (req, res) => {
+    const id = req.params.id;
+    const resposta = await manipularDB({ id }, mongo.deleteUsuario);
+
+    if (resposta == null) {
+        res.status(404).json('Aluno não encontrado no banco de dados!');
+    } else {
+        res.status(200).json(`Aluno ${id} deletado do banco de dados!`);
+    }
+})
 
 app.listen(3000, async () => {
     console.log(`Servidor rodando em http://localhost:3000`);

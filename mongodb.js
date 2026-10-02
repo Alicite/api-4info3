@@ -8,21 +8,17 @@ const createUsuario = async (con, user) => {
     await con.db("4INFO3").collection("Alunos").insertOne(user);
 
     // throw new Error("tentando errar");
-    return `Usuário ${user.nome} adicionado ao MongoDB!`;
+    return `Aluno ${user.nome} adicionado ao MongoDB!`;
 }
 
-const deleteUsuario = async (con, user) => {
-    await con.db("4INFO3").collection("Alunos").findOneAndDelete({_id: new ObjectId(user.id)});
-
-    return `Usuário ${user.id} deletado do MongoDB!`
-}
+const deleteUsuario = async (con, user) => await con.db("4INFO3").collection("Alunos").findOneAndDelete({_id: new ObjectId(user.id)});
 
 const attUsuario = async (con, user) => {
     const _id = new ObjectId(user.id);
     delete user.id;
     await con.db("4INFO3").collection("Alunos").replaceOne({ _id }, user);
 
-    return `Usuário ${user.nome} atualizado no MongoDB!`;
+    return `Aluno ${user.nome} atualizado no MongoDB!`;
 }
 
 const mongo = { getUsuarios, getUsuario, createUsuario, deleteUsuario, attUsuario };
