@@ -65,37 +65,45 @@ app.post('/alunos', async (req, res) => {
 });
 
 app.delete('/alunos/:id', async (req, res) => {
-    const id = req.params.id;
-    const resposta = await manipularDB({ id }, mongo.deleteUsuario);
-
-    if (resposta == null) {
-        res.status(404).json('Aluno não encontrado no banco de dados!');
-    } else {
-        res.status(200).json(`Aluno ${id} deletado do banco de dados!`);
+    try {
+        const id = req.params.id;
+        const resposta = await manipularDB({ id }, mongo.deleteUsuario);
+    
+        if (resposta == null) {
+            res.status(404).json('Aluno não encontrado no banco de dados!');
+        } else {
+            res.status(200).json(`Aluno ${id} deletado do banco de dados!`);
+        }
+    } catch (e) {
+        console.error(e.message)
     }
 })
 
 app.put('/alunos/:id', async (req, res) => {
-    const id = req.params.id;
-    const aluno = req.body.aluno;
-    const alunoExistente = await manipularDB({ id }, mongo.getUsuario)
-
-    if (alunoExistente == null) {
-        res.status(404).json('Aluno não encontrado no banco de dados!');
-    } else {
-        for (let [chave, valor] of Object.entries(aluno)){
-            if (valor == ''){
-                delete alunoExistente[chave];
-            } else {
-                alunoExistente[chave] = valor;
+    try {
+        const id = req.params.id;
+        const aluno = req.body.aluno;
+        const alunoExistente = await manipularDB({ id }, mongo.getUsuario)
+    
+        if (alunoExistente == null) {
+            res.status(404).json('Aluno não encontrado no banco de dados!');
+        } else {
+            for (let [chave, valor] of Object.entries(aluno)){
+                if (valor == ''){
+                    delete alunoExistente[chave];
+                } else {
+                    alunoExistente[chave] = valor;
+                }
             }
-        }
-
-        delete alunoExistente._id;
-        alunoExistente.id = id;
-
-        const resposta = await manipularDB(alunoExistente, mongo.attUsuario)
-        res.status(200).json(resposta);
+    
+            delete alunoExistente._id;
+            alunoExistente.id = id;
+    
+            const resposta = await manipularDB(alunoExistente, mongo.attUsuario)
+            res.status(200).json(resposta);
+        } 
+    } catch (e) {
+        console.error(e.message)
     }
 });
 
