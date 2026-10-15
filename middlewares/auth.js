@@ -1,0 +1,25 @@
+import jwt from 'jsonwebtoken';
+import 'dotenv/config';
+
+const SECRET = process.env.JWT_SECRET;
+
+export const autenticarToken = (req, res, next) => {
+    const reqHeader = req.headers['authorization'];
+    const token = reqHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ 
+            erro: "Acesso negado! O token não foi fornecido!"
+        });
+    }
+
+    try {
+        const userDecoded = jwt.verify(token, SECRET);
+        req.usuario = userDecoded;
+        next();
+    } catch (e) {
+        return res.status(403).json({
+            erro: "Acesso negado! Token inválido ou expirado!"
+        })
+    }
+}
