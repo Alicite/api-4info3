@@ -2,22 +2,22 @@ import { ObjectId } from "mongodb";
 import 'dotenv/config';
 
 const getAlunos = async (con) => await con.db("4INFO3").collection("Alunos").find({}).toArray();
-const getAluno = async (con, user) => await con.db("4INFO3").collection("Alunos").findOne({_id: new ObjectId(user.id)});
+const getAluno = async (con, aluno) => await con.db("4INFO3").collection("Alunos").findOne({_id: new ObjectId(aluno.id)});
 
-const createAluno = async (con, user) => {
-    await con.db("4INFO3").collection("Alunos").insertOne(user);
+const createAluno = async (con, aluno) => {
+    await con.db("4INFO3").collection("Alunos").insertOne(aluno);
 
-    return `Aluno ${user.nome} adicionado ao MongoDB!`;
+    return `Aluno ${aluno.nome} adicionado ao MongoDB!`;
 }
 
-const deleteAluno = async (con, user) => await con.db("4INFO3").collection("Alunos").findOneAndDelete({_id: new ObjectId(user.id)});
+const deleteAluno = async (con, aluno) => await con.db("4INFO3").collection("Alunos").findOneAndDelete({_id: new ObjectId(aluno.id)});
 
-const attAluno = async (con, user) => {
-    const _id = new ObjectId(user.id);
-    delete user.id;
-    await con.db("4INFO3").collection("Alunos").replaceOne({ _id }, user);
+const attAluno = async (con, aluno) => {
+    const _id = new ObjectId(aluno.id);
+    delete aluno.id;
+    await con.db("4INFO3").collection("Alunos").replaceOne({ _id }, aluno);
 
-    return `Aluno ${user.nome} atualizado no MongoDB!`;
+    return `Aluno ${aluno.nome} atualizado no MongoDB!`;
 }
 
 const mongo = { getAlunos, getAluno, createAluno, deleteAluno, attAluno };
