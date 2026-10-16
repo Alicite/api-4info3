@@ -1,9 +1,11 @@
 import { manipularDB } from '../db/db.js';
-import mongo from '../db/alunos.js';
+import {
+    getAlunos,getAluno, createAluno, deleteAluno, attAluno
+} from '../db/alunos.js';
 
 export const getAlunos = async (req, res) => {
     try {
-        const alunos = await manipularDB({}, mongo.getAlunos);
+        const alunos = await manipularDB({}, getAlunos);
 
         if (!alunos[0]){
             res.status(404).json('Nenhum aluno encontrado no banco de dados!');
@@ -20,7 +22,7 @@ export const getAluno = async (req, res) => {
     const id = req.params.id;
 
     try {
-        const aluno = await manipularDB({ id }, mongo.getAluno);
+        const aluno = await manipularDB({ id }, getAluno);
         
         if (aluno == null) {
             res.status(404).json('Aluno não encontrado no banco de dados!');
@@ -35,7 +37,7 @@ export const getAluno = async (req, res) => {
 export const createAluno = async (req, res) => {
     try {
         const aluno = req.body.aluno;
-        const todosOsAlunos = await manipularDB({}, mongo.getAlunos);
+        const todosOsAlunos = await manipularDB({}, getAlunos);
         let valido = true;
 
         for (let a of todosOsAlunos) {
@@ -45,7 +47,7 @@ export const createAluno = async (req, res) => {
         }
 
         if (valido) {
-            const alunoAdicionado = await manipularDB(aluno, mongo.createAluno)
+            const alunoAdicionado = await manipularDB(aluno, createAluno)
     
             if (alunoAdicionado == null) {
                 res.status(404).json('Não foi possível adicionar o aluno no banco de dados!');
@@ -63,7 +65,7 @@ export const createAluno = async (req, res) => {
 export const deleteAluno = async (req, res) => {
     try {
         const id = req.params.id;
-        const resposta = await manipularDB({ id }, mongo.deleteAluno);
+        const resposta = await manipularDB({ id }, deleteAluno);
     
         if (resposta == null) {
             res.status(404).json('Aluno não encontrado no banco de dados!');
@@ -79,7 +81,7 @@ export const attAluno = async (req, res) => {
     try {
         const id = req.params.id;
         const aluno = req.body.aluno;
-        const alunoExistente = await manipularDB({ id }, mongo.getAluno)
+        const alunoExistente = await manipularDB({ id }, getAluno)
     
         if (alunoExistente == null) {
             res.status(404).json('Aluno não encontrado no banco de dados!');
@@ -95,7 +97,7 @@ export const attAluno = async (req, res) => {
             delete alunoExistente._id;
             alunoExistente.id = id;
     
-            const resposta = await manipularDB(alunoExistente, mongo.attAluno)
+            const resposta = await manipularDB(alunoExistente, attAluno)
             res.status(200).json(resposta);
         } 
     } catch (e) {
