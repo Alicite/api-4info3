@@ -1,14 +1,12 @@
 import express from 'express';
-import bcrypt from 'bcryptjs';
 import { routerAlunos } from './routes/alunos.js';
 import { routerAuth } from './routes/auth.js';
-import { manipularDB } from './db/db.js';
-import { getUsuarioEmail, createUsuario } from './db/usuarios.js';
+import { autenticarToken } from './middlewares/auth.js';
 
 const app = express();
 app.use(express.json());
 
-app.use('/alunos', routerAlunos);
+app.use('/alunos', autenticarToken, routerAlunos);
 
 app.use('/auth', routerAuth);
 
