@@ -25,7 +25,14 @@ export const autenticarToken = (req, res, next) => {
 }
 
 export const autorizarUsuario = (req, res, next) => {
-    if (!req.usuario || !req.usuario.admin) {
+    if (!req.usuario || !["usuario", "diretor"].includes(req.usuario.cargo)) {
+        return res.status(403).json("Usuário não autorizado para realizar esta operação!")
+    }
+    next();
+}
+
+export const autorizarDiretor = (req, res, next) => {
+    if (!req.usuario || req.usuario.cargo !== 'diretor') {
         return res.status(403).json("Usuário não autorizado para realizar esta operação!")
     }
     next();

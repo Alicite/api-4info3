@@ -6,30 +6,6 @@ import 'dotenv/config';
 
 const SECRET = process.env.JWT_SECRET;
 
-export const createUsuario = async (req, res) => {
-    const { email, senha, admin } = req.body;
-
-    try {
-        const usuarioExiste = await manipularDB({ email }, dbUsuarios.getUsuarioEmail)
-
-        if (usuarioExiste) {
-            return res.status(400).json("Este email já está cadastrado no banco de dados!")
-        }
-
-        const salt = await bcrypt.genSalt();
-        const senhaCrypt = await bcrypt.hash(senha, salt)
-
-        const resultado = await manipularDB(
-            {email, senha: senhaCrypt, admin}, dbUsuarios.createUsuario
-        );
-
-        res.status(201).json(resultado)
-    } catch (e) {
-        console.log(e)
-        res.status(500).json(e.message);
-    }
-}
-
 export const loginUsuario = async (req, res) => {
     const { email, senha } = req.body;
 
@@ -47,7 +23,7 @@ export const loginUsuario = async (req, res) => {
         }
     
         const token = jwt.sign(
-            { id: usuario._id, email: usuario.email, admin: usuario.admin},
+            { id: usuario._id, email: usuario.email, cargo: usuario.cargo},
             SECRET,
             { expiresIn: '1h' }
         )
