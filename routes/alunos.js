@@ -10,8 +10,8 @@ routerAlunos.get('/', getAlunos);
 
 routerAlunos.get('/:id', getAluno);
 
-routerAlunos.post('/', autorizarUsuario, createAluno);
+routerAlunos.post('/', createAluno);
 
 routerAlunos.delete('/:id', autorizarUsuario, deleteAluno)
 
-routerAlunos.put('/:id', autorizarUsuario, attAluno);
+routerAlunos.put('/:id', attAluno);
