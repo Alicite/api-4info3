@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export const getUsuarios = async (con) => await con.db("4INFO3").collection("Usuarios").find({}).toArray();
 export const getUsuario = async (con, usuario) => await con.db("4INFO3").collection("Usuarios").findOne({_id: new ObjectId(usuario.id)});
 
@@ -19,5 +21,5 @@ export const attUsuario = async (con, usuario) => {
     delete usuario.id;
     await con.db("4INFO3").collection("Usuarios").replaceOne({ _id }, usuario);
 
-    return `Usuario ${usuario.nome} atualizado no MongoDB!`;
+    return `Usuario ${usuario.email} atualizado no MongoDB!`;
 }

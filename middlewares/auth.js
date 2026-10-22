@@ -24,15 +24,20 @@ export const autenticarToken = (req, res, next) => {
     }
 }
 
-export const autorizarUsuario = (req, res, next) => {
-    if (!req.usuario || !["usuario", "diretor"].includes(req.usuario.cargo)) {
-        return res.status(403).json("Usuário não autorizado para realizar esta operação!")
+export const autorizarDiretor = (req, res, next) => {
+    console.log(req.usuario)
+    if (!req.usuario || !req.usuario.admin) {
+        return res.status(403).json("Usuário não autorizado para realizar esta operação!");
     }
     next();
 }
 
-export const autorizarDiretor = (req, res, next) => {
-    if (!req.usuario || req.usuario.cargo !== 'diretor') {
+export const verificarId = (req, res, next) => {
+    if (
+        !req.usuario ||
+        (req.usuario.id !== req.params.id && 
+        !req.usuario.admin)
+    ) {
         return res.status(403).json("Usuário não autorizado para realizar esta operação!");
     }
     next();
