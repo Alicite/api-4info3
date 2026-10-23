@@ -53,10 +53,6 @@ export const attUsuario = async (req, res) => {
     const id = req.params.id;
     const usuario = req.body.usuario;
 
-    if (req.usuario.cargo !== 'diretor' && usuario.cargo === 'diretor') {
-        return res.status(403).json("Usuário não autorizado para realizar esta operação!");
-    }
-
     try {
         const usuarioExistente = await manipularDB({ id }, dbUsuarios.getUsuario)
     
@@ -108,4 +104,4 @@ export const createUsuario = async (req, res) => {
         console.log(e)
         res.status(500).json(e.message);
     }
-}
+};
