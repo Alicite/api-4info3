@@ -54,7 +54,7 @@ export const attUsuario = async (req, res) => {
     const usuario = req.body.usuario;
 
     try {
-        const usuarioExistente = await manipularDB({ id }, dbUsuarios.getUsuario)
+        const usuarioExistente = await manipularDB({ id }, dbUsuarios.getUsuario);
     
         if (usuarioExistente == null) {
             res.status(404).json('Usuário não encontrado no banco de dados!');
@@ -99,5 +99,53 @@ export const createUsuario = async (req, res) => {
     } catch (e) {
         console.log(e)
         res.status(500).json(e.message);
+    }
+};
+
+export const desativarUsuario = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const usuarioExistente = await manipularDB({ id }, dbUsuarios.getUsuario);
+        
+        if (usuarioExistente == null) {
+            return res.status(404).json('Usuário não encontrado no banco de dados!');
+        }
+        
+        if (!usuarioExistente.ativo) {
+            return res.status(404).json('O usuário já foi desativado anteriormente!');
+        }
+
+        usuarioExistente.ativo = false;
+        delete usuarioExistente._id;
+        usuarioExistente.id = id;
+        await manipularDB(usuarioExistente, dbUsuarios.attUsuario)
+        res.status(200).json(`Usuário ${usuarioExistente.email} foi desativado no mongoDB!`);
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+export const ativarUsuario = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const usuarioExistente = await manipularDB({ id }, dbUsuarios.getUsuario);
+        
+        if (usuarioExistente == null) {
+            return res.status(404).json('Usuário não encontrado no banco de dados!');
+        }
+
+        if (usuarioExistente.ativo) {
+            return res.status(404).json('O usuário já está ativo!');
+        }
+
+        usuarioExistente.ativo = true;
+        delete usuarioExistente._id;
+        usuarioExistente.id = id;
+        await manipularDB(usuarioExistente, dbUsuarios.attUsuario)
+        res.status(200).json(`Usuário ${usuarioExistente.email} foi reativado no mongoDB!`);
+    } catch (e) {
+        console.error(e.message);
     }
 };

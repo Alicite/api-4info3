@@ -13,7 +13,11 @@ export const loginUsuario = async (req, res) => {
         const usuario = await manipularDB({ email }, dbUsuarios.getUsuarioEmail);
     
         if (!usuario) {
-            return res.status(400).json("Email ou senha incorretos!")
+            return res.status(400).json("Email ou senha incorretos!");
+        }
+
+        if (!usuario.ativo) {
+            return res.status(400).json("Usuário desativado! Contate o administrador!")
         }
     
         const senhaValida = await bcrypt.compare(senha, usuario.senha);
@@ -23,7 +27,7 @@ export const loginUsuario = async (req, res) => {
         }
     
         const token = jwt.sign(
-            { id: usuario._id, email: usuario.email, admin: usuario.admin},
+            { id: usuario._id, email: usuario.email, admin: usuario.admin, ativo: usuario.ativo},
             SECRET,
             { expiresIn: '1h' }
         )
