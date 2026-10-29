@@ -57,42 +57,49 @@ export const attUsuario = async (req, res) => {
         const usuarioExistente = await manipularDB({ id }, dbUsuarios.getUsuario);
     
         if (usuarioExistente == null) {
-            res.status(404).json('Usuário não encontrado no banco de dados!');
-        } else {
-            for (let [chave, valor] of Object.entries(usuario)){
-                if (valor == ''){
-                    delete usuarioExistente[chave];
-                } else {
-                    usuarioExistente[chave] = valor;
-                }
+           return res.status(404).json('Usuário não encontrado no banco de dados!');
+        }
+
+        if (usuario.email) {
+            const emailExistente = await manipularDB({ email: usuario.email }, dbUsuarios.getUsuarioEmail);
+            if (emailExistente) {
+                return res.status(400).json("Este email já está cadastrado no banco de dados!");
             }
-    
-            delete usuarioExistente._id;
-            usuarioExistente.id = id;
-    
-            const resposta = await manipularDB(usuarioExistente, dbUsuarios.attUsuario)
-            res.status(200).json(resposta);
-        } 
+        }
+        
+        for (let [chave, valor] of Object.entries(usuario)){
+            if (valor == ''){
+                delete usuarioExistente[chave];
+            } else {
+                usuarioExistente[chave] = valor;
+            }
+        }
+
+        delete usuarioExistente._id;
+        usuarioExistente.id = id;
+
+        const resposta = await manipularDB(usuarioExistente, dbUsuarios.attUsuario)
+        return res.status(200).json(resposta);
     } catch (e) {
-        console.error(e.message)
+        console.error(e)
     }
 };
 
 export const createUsuario = async (req, res) => {
-    const { email, senha, cargo } = req.body.usuario;
+    const { email, senha, admin } = req.body.usuario;
 
     try {
         const usuarioExiste = await manipularDB({ email }, dbUsuarios.getUsuarioEmail)
 
         if (usuarioExiste) {
-            return res.status(400).json("Este email já está cadastrado no banco de dados!")
+            return res.status(400).json("Este email já está cadastrado no banco de dados!");
         }
 
         const salt = await bcrypt.genSalt();
         const senhaCrypt = await bcrypt.hash(senha, salt)
 
         const resultado = await manipularDB(
-            {email, senha: senhaCrypt, cargo}, dbUsuarios.createUsuario
+            {email, senha: senhaCrypt, admin, ativo: true}, dbUsuarios.createUsuario
         );
 
         res.status(201).json(resultado)
